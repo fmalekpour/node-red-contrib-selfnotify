@@ -1,0 +1,34 @@
+{
+  "name": "node-red-contrib-selfnotify",
+  "version": "1.0.0",
+  "description": "Node-RED node to send push notifications via SelfNotify",
+  "keywords": [
+    "node-red",
+    "selfnotify",
+    "push notification",
+    "notification",
+    "alert",
+    "mobile"
+  ],
+  "author": "SelfNotify",
+  "license": "MIT",
+  "homepage": "https://self-notify.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fmalekpour/node-red-contrib-selfnotify"
+  },
+  "bugs": {
+    "url": "https://github.com/fmalekpour/node-red-contrib-selfnotify/issues"
+  },
+  "node-red": {
+    "version": ">=2.0.0",
+    "nodes": {
+      "selfnotify": "selfnotify.js"
+    }
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "dependencies": {}
+}
+

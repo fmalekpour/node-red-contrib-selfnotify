@@ -1,0 +1,238 @@
+<!-- ─────────────────────────────────────────────────────────────
+     SelfNotify config node (stores token as a credential)
+───────────────────────────────────────────────────────────── -->
+<script type="text/javascript">
+  RED.nodes.registerType("selfnotify-config", {
+    category: "config",
+    defaults: {
+      name: { value: "" },
+    },
+    credentials: {
+      token: { type: "password" },
+    },
+    label: function () {
+      return this.name || "SelfNotify account";
+    },
+  });
+</script>
+
+<script type="text/html" data-template-name="selfnotify-config">
+  <div class="form-row">
+    <label for="node-config-input-name">
+      <i class="fa fa-tag"></i> Name
+    </label>
+    <input type="text" id="node-config-input-name" placeholder="My SelfNotify account" />
+  </div>
+  <div class="form-row">
+    <label for="node-config-input-token">
+      <i class="fa fa-key"></i> Token
+    </label>
+    <input type="password" id="node-config-input-token" placeholder="Your token from the app" />
+  </div>
+  <div class="form-tips">
+    <b>Tip:</b> Find your token on the main screen of the SelfNotify app.
+  </div>
+</script>
+
+
+<!-- ─────────────────────────────────────────────────────────────
+     SelfNotify main node
+───────────────────────────────────────────────────────────── -->
+<script type="text/javascript">
+  RED.nodes.registerType("selfnotify", {
+    category: "output",
+    color: "#3b82f6",
+    defaults: {
+      name:       { value: "" },
+      configNode: { value: "", type: "selfnotify-config" },
+      title:      { value: "" },
+      subtitle:   { value: "" },
+      message:    { value: "" },
+      alertLevel: { value: "active" },
+      sound:      { value: "" },
+      group:      { value: "" },
+    },
+    inputs: 1,
+    outputs: 1,
+    icon: "font-awesome/fa-bell",
+    paletteLabel: "selfnotify",
+    label: function () {
+      return this.name || "SelfNotify";
+    },
+    labelStyle: function () {
+      return this.name ? "node_label_italic" : "";
+    },
+    oneditprepare: function () {
+      // Show/hide the message field hint
+      $("#node-input-message").on("input", function () {
+        const val = $(this).val().trim();
+        $("#sn-message-hint").toggle(val === "");
+      });
+    },
+  });
+</script>
+
+<script type="text/html" data-template-name="selfnotify">
+  <!-- Account config -->
+  <div class="form-row">
+    <label for="node-input-configNode">
+      <i class="fa fa-user"></i> Account
+    </label>
+    <input type="text" id="node-input-configNode" />
+  </div>
+
+  <!-- Name -->
+  <div class="form-row">
+    <label for="node-input-name">
+      <i class="fa fa-tag"></i> Name
+    </label>
+    <input type="text" id="node-input-name" placeholder="Label this node" />
+  </div>
+
+  <hr style="margin:12px 0" />
+
+  <!-- Title -->
+  <div class="form-row">
+    <label for="node-input-title">
+      <i class="fa fa-header"></i> Title
+    </label>
+    <input type="text" id="node-input-title"
+           placeholder="e.g. Build Complete  (or set msg.title)" />
+  </div>
+
+  <!-- Subtitle -->
+  <div class="form-row">
+    <label for="node-input-subtitle">
+      <i class="fa fa-text-width"></i> Subtitle
+    </label>
+    <input type="text" id="node-input-subtitle"
+           placeholder="Optional subtitle  (or set msg.subtitle)" />
+  </div>
+
+  <!-- Message -->
+  <div class="form-row">
+    <label for="node-input-message">
+      <i class="fa fa-comment"></i> Message
+    </label>
+    <input type="text" id="node-input-message"
+           placeholder="Default body text  (or pass msg.payload)" />
+    <div id="sn-message-hint" class="form-tips" style="margin-top:4px">
+      Leave blank to use <b>msg.payload</b> as the notification body.
+    </div>
+  </div>
+
+  <!-- Alert level -->
+  <div class="form-row">
+    <label for="node-input-alertLevel">
+      <i class="fa fa-exclamation-circle"></i> Alert level
+    </label>
+    <select id="node-input-alertLevel" style="width:70%">
+      <option value="active">active – plays sound and shows banner</option>
+      <option value="passive">passive – silent, no banner</option>
+      <option value="time-sensitive">time-sensitive – breaks through Focus/DND</option>
+      <option value="critical">critical – highest priority</option>
+    </select>
+  </div>
+
+  <!-- Sound -->
+  <div class="form-row">
+    <label for="node-input-sound">
+      <i class="fa fa-music"></i> Sound
+    </label>
+    <input type="text" id="node-input-sound"
+           placeholder="e.g. snd01, snd08, cs1  (or set msg.sound)" />
+  </div>
+
+  <!-- Group -->
+  <div class="form-row">
+    <label for="node-input-group">
+      <i class="fa fa-folder"></i> Group
+    </label>
+    <input type="text" id="node-input-group"
+           placeholder="Category label  (or set msg.group)" />
+  </div>
+
+  <div class="form-tips">
+    <b>msg properties override node config:</b>
+    <code>msg.payload</code>, <code>msg.title</code>, <code>msg.subtitle</code>,
+    <code>msg.alertLevel</code>, <code>msg.sound</code>, <code>msg.group</code>,
+    <code>msg.token</code> (overrides account), <code>msg.custom</code> (object of custom attributes).
+  </div>
+</script>
+
+<script type="text/html" data-help-name="selfnotify">
+  <p>
+    Sends a push notification to your devices via
+    <a href="https://self-notify.com" target="_blank">SelfNotify</a>.
+  </p>
+
+  <h3>Configuration</h3>
+  <p>
+    Create a <b>SelfNotify account</b> config node and paste your token from the app.
+    All other fields are optional defaults that can be overridden per-message.
+  </p>
+
+  <h3>Input</h3>
+  <dl class="message-properties">
+    <dt>payload <span class="property-type">string</span></dt>
+    <dd>Notification body text. Overrides the <i>Message</i> field.</dd>
+
+    <dt class="optional">token <span class="property-type">string</span></dt>
+    <dd>Override the account token for this message.</dd>
+
+    <dt class="optional">title <span class="property-type">string</span></dt>
+    <dd>Bold heading shown above the message body.</dd>
+
+    <dt class="optional">subtitle <span class="property-type">string</span></dt>
+    <dd>Secondary line below the title.</dd>
+
+    <dt class="optional">alertLevel <span class="property-type">string</span></dt>
+    <dd>
+      One of <code>active</code>, <code>passive</code>,
+      <code>time-sensitive</code>, <code>critical</code>.
+    </dd>
+
+    <dt class="optional">sound <span class="property-type">string</span></dt>
+    <dd>
+      Sound name without extension, e.g. <code>snd01</code>–<code>snd16</code>
+      or <code>cs1</code>, <code>cs2</code> for custom sounds.
+    </dd>
+
+    <dt class="optional">group <span class="property-type">string</span></dt>
+    <dd>Category label for filtering in the app.</dd>
+
+    <dt class="optional">custom <span class="property-type">object</span></dt>
+    <dd>
+      Key/value pairs attached as custom attributes, e.g.<br/>
+      <code>{ "server": "web-01", "usage": "94%" }</code>
+    </dd>
+
+    <dt class="optional">custom_* <span class="property-type">string</span></dt>
+    <dd>
+      Alternatively, set individual <code>msg.custom_xxx</code> properties
+      and they will be forwarded directly.
+    </dd>
+  </dl>
+
+  <h3>Output</h3>
+  <dl class="message-properties">
+    <dt>selfnotify <span class="property-type">object</span></dt>
+    <dd>
+      <code>{ statusCode: 200, body: "..." }</code>
+      — the raw API response, added to the passed-through message.
+    </dd>
+  </dl>
+
+  <h3>Alert levels</h3>
+  <ul>
+    <li><b>active</b> — plays sound, shows heads-up banner (default)</li>
+    <li><b>passive</b> — silent delivery to notification center/shade only</li>
+    <li><b>time-sensitive</b> — breaks through Focus / Do Not Disturb</li>
+    <li><b>critical</b> — highest priority, may bypass DND entirely</li>
+  </ul>
+
+  <h3>References</h3>
+  <ul>
+    <li><a href="https://self-notify.com/docs.html" target="_blank">SelfNotify API documentation</a></li>
+  </ul>
+</script>
