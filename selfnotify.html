@@ -8,7 +8,7 @@
       name: { value: "" },
     },
     credentials: {
-      token: { type: "password" },
+      token: { type: "text" },
     },
     label: function () {
       return this.name || "SelfNotify account";
@@ -27,7 +27,10 @@
     <label for="node-config-input-token">
       <i class="fa fa-key"></i> Token
     </label>
-    <input type="password" id="node-config-input-token" placeholder="Your token from the app" />
+    <input type="text" id="node-config-input-token"
+           placeholder="Your token from the app"
+           style="text-transform:uppercase;font-family:monospace;letter-spacing:0.05em"
+           oninput="this.value=this.value.toUpperCase()" />
   </div>
   <div class="form-tips">
     <b>Tip:</b> Find your token on the main screen of the SelfNotify app.
@@ -41,7 +44,7 @@
 <script type="text/javascript">
   RED.nodes.registerType("selfnotify", {
     category: "output",
-    color: "#3b82f6",
+    color: "#FEA07F",
     defaults: {
       name:       { value: "" },
       configNode: { value: "", type: "selfnotify-config" },
@@ -91,6 +94,19 @@
 
   <hr style="margin:12px 0" />
 
+
+  <!-- Message -->
+  <div class="form-row">
+    <label for="node-input-message">
+      <i class="fa fa-comment"></i> Message
+    </label>
+    <input type="text" id="node-input-message"
+           placeholder="Default body text  (or pass msg.payload)" />
+    <div id="sn-message-hint" class="form-tips" style="margin-top:4px">
+      Leave blank to use <b>msg.payload</b> as the notification body.
+    </div>
+  </div>
+
   <!-- Title -->
   <div class="form-row">
     <label for="node-input-title">
@@ -107,18 +123,6 @@
     </label>
     <input type="text" id="node-input-subtitle"
            placeholder="Optional subtitle  (or set msg.subtitle)" />
-  </div>
-
-  <!-- Message -->
-  <div class="form-row">
-    <label for="node-input-message">
-      <i class="fa fa-comment"></i> Message
-    </label>
-    <input type="text" id="node-input-message"
-           placeholder="Default body text  (or pass msg.payload)" />
-    <div id="sn-message-hint" class="form-tips" style="margin-top:4px">
-      Leave blank to use <b>msg.payload</b> as the notification body.
-    </div>
   </div>
 
   <!-- Alert level -->
