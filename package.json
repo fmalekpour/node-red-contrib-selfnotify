@@ -15,7 +15,7 @@
   "homepage": "https://self-notify.com",
   "repository": {
     "type": "git",
-    "url": "https://github.com/fmalekpour/node-red-contrib-selfnotify"
+    "url": "git+https://github.com/fmalekpour/node-red-contrib-selfnotify.git"
   },
   "bugs": {
     "url": "https://github.com/fmalekpour/node-red-contrib-selfnotify/issues"
