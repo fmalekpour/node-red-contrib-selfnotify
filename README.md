@@ -152,5 +152,5 @@ The original `msg` is passed through with one extra property added:
 ## Links
 
 - [SelfNotify API documentation](https://self-notify.com/docs.html)
-- [SelfNotify on the App Store](https://apps.apple.com)
-- [SelfNotify on Google Play](https://play.google.com)
+- [SelfNotify on the App Store](https://itunes.bejbej.ca/selfnotify)
+- [SelfNotify on Google Play](https://play.google.com/store/apps/details?id=com.dayananetworks.selfnotify)
