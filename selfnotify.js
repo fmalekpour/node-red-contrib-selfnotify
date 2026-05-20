@@ -109,14 +109,16 @@ module.exports = function (RED) {
       }
 
       // ── Resolve message ────────────────────────────────────
-      // Priority: msg.payload (string) > msg.message > node config
+      // Priority: node config > msg.message > msg.payload
+      // The node config is the "default" — set it to lock the message.
+      // Leave it blank to let msg.payload or msg.message flow through.
       let message;
-      if (typeof msg.payload === "string" && msg.payload.trim() !== "") {
-        message = msg.payload;
-      } else if (msg.message !== undefined) {
-        message = msg.message;
-      } else {
+      if (node.message && String(node.message).trim() !== "") {
         message = node.message;
+      } else if (msg.message !== undefined && String(msg.message).trim() !== "") {
+        message = msg.message;
+      } else if (typeof msg.payload === "string" && msg.payload.trim() !== "") {
+        message = msg.payload;
       }
 
       if (!message || String(message).trim() === "") {
